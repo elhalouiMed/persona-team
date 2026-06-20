@@ -1,0 +1,14 @@
+{
+  "name": "persona-team",
+  "version": "0.1.0",
+  "description": "A multi-agent Claude Code add-on: spin up a live persona team (BA, architect, engineers, QA, recruiter) for any task with a live dashboard.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_GITHUB_USERNAME/persona-team"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

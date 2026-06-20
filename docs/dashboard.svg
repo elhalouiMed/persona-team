@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540" font-family="system-ui,Segoe UI,Arial,sans-serif">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#34dbf0"/>
+      <stop offset="0.55" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#e07bf5"/>
+    </linearGradient>
+    <radialGradient id="glowC" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#34dbf0" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#34dbf0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowM" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#e07bf5" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#e07bf5" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="1200" height="540" fill="#06080f"/>
+  <ellipse cx="140" cy="-30" rx="540" ry="320" fill="url(#glowC)"/>
+  <ellipse cx="1090" cy="-10" rx="500" ry="300" fill="url(#glowM)"/>
+
+  <!-- header -->
+  <rect x="48" y="44" width="34" height="34" rx="10" fill="#34dbf0" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.16"/>
+  <circle cx="65" cy="61" r="5" fill="#34dbf0"/>
+  <text x="94" y="65" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" letter-spacing="5" fill="url(#brand)">PERSONA TEAM</text>
+  <text x="95" y="85" font-size="12" fill="#9aa7c2">Spin up a senior team. Watch them ship — live.</text>
+
+  <!-- running pill -->
+  <rect x="1006" y="50" width="146" height="30" rx="15" fill="#34dbf0" fill-opacity="0.08" stroke="#34dbf0" stroke-opacity="0.42"/>
+  <circle cx="1028" cy="65" r="4" fill="#34dbf0"/>
+  <text x="1041" y="69" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="2.5" fill="#34dbf0">RUNNING</text>
+
+  <!-- stats -->
+  <!-- AGENTS -->
+  <rect x="48" y="112" width="264" height="96" rx="16" fill="#ffffff" fill-opacity="0.035" stroke="#ffffff" stroke-opacity="0.10"/>
+  <rect x="48" y="112" width="4" height="96" rx="2" fill="url(#brand)"/>
+  <text x="72" y="172" font-family="ui-monospace,Menlo,monospace" font-size="40" font-weight="700" fill="#eef3fb">7</text>
+  <text x="73" y="194" font-size="11" letter-spacing="2.5" fill="#9aa7c2">AGENTS</text>
+  <!-- WORKING -->
+  <rect x="328" y="112" width="264" height="96" rx="16" fill="#ffffff" fill-opacity="0.035" stroke="#34dbf0" stroke-opacity="0.28"/>
+  <rect x="328" y="112" width="4" height="96" rx="2" fill="#34dbf0"/>
+  <text x="352" y="172" font-family="ui-monospace,Menlo,monospace" font-size="40" font-weight="700" fill="#34dbf0">3</text>
+  <text x="353" y="194" font-size="11" letter-spacing="2.5" fill="#34dbf0">WORKING</text>
+  <!-- WAITING -->
+  <rect x="608" y="112" width="264" height="96" rx="16" fill="#ffffff" fill-opacity="0.035" stroke="#ffffff" stroke-opacity="0.10"/>
+  <rect x="608" y="112" width="4" height="96" rx="2" fill="#ffcb45"/>
+  <text x="632" y="172" font-family="ui-monospace,Menlo,monospace" font-size="40" font-weight="700" fill="#ffcb45">2</text>
+  <text x="633" y="194" font-size="11" letter-spacing="2.5" fill="#ffcb45">WAITING</text>
+  <!-- DONE -->
+  <rect x="888" y="112" width="264" height="96" rx="16" fill="#ffffff" fill-opacity="0.035" stroke="#ffffff" stroke-opacity="0.10"/>
+  <rect x="888" y="112" width="4" height="96" rx="2" fill="#46e0a8"/>
+  <text x="912" y="172" font-family="ui-monospace,Menlo,monospace" font-size="40" font-weight="700" fill="#46e0a8">2</text>
+  <text x="913" y="194" font-size="11" letter-spacing="2.5" fill="#46e0a8">DONE</text>
+
+  <!-- ===== pipeline columns ===== -->
+  <!-- column headers -->
+  <g font-family="ui-monospace,Menlo,monospace" font-size="11.5" letter-spacing="1.5">
+    <rect x="48"  y="242" width="210" height="34" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#46e0a8" stroke-opacity="0.30"/>
+    <circle cx="66" cy="259" r="4" fill="#46e0a8"/><text x="78" y="263" fill="#46e0a8">ANALYZE</text>
+    <rect x="271" y="242" width="210" height="34" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#46e0a8" stroke-opacity="0.30"/>
+    <circle cx="289" cy="259" r="4" fill="#46e0a8"/><text x="301" y="263" fill="#46e0a8">DESIGN</text>
+    <rect x="494" y="242" width="210" height="34" rx="10" fill="#34dbf0" fill-opacity="0.08" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <circle cx="512" cy="259" r="4" fill="#34dbf0"/><text x="524" y="263" fill="#34dbf0">IMPLEMENT · 3</text>
+    <rect x="717" y="242" width="210" height="34" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.10"/>
+    <circle cx="735" cy="259" r="4" fill="#9aa7c2"/><text x="747" y="263" fill="#aeb9d2">TEST</text>
+    <rect x="940" y="242" width="210" height="34" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.10"/>
+    <circle cx="958" cy="259" r="4" fill="#9aa7c2"/><text x="970" y="263" fill="#aeb9d2">DELIVER</text>
+  </g>
+
+  <!-- card template helpers drawn inline -->
+  <!-- ANALYZE: business-analyst (done) -->
+  <g>
+    <rect x="48" y="290" width="210" height="54" rx="12" fill="#ffffff" fill-opacity="0.04" stroke="#46e0a8" stroke-opacity="0.32"/>
+    <rect x="60" y="302" width="28" height="28" rx="8" fill="#46e0a8" fill-opacity="0.16" stroke="#46e0a8" stroke-opacity="0.4"/>
+    <text x="74" y="321" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#46e0a8">BA</text>
+    <text x="98" y="312" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#eef3fb">business-analyst</text>
+    <text x="98" y="330" font-size="10" fill="#9aa7c2">Requirements &amp; scope</text>
+    <circle cx="242" cy="304" r="3.5" fill="#46e0a8"/>
+  </g>
+  <!-- DESIGN: software-architect (done) -->
+  <g>
+    <rect x="271" y="290" width="210" height="54" rx="12" fill="#ffffff" fill-opacity="0.04" stroke="#46e0a8" stroke-opacity="0.32"/>
+    <rect x="283" y="302" width="28" height="28" rx="8" fill="#46e0a8" fill-opacity="0.16" stroke="#46e0a8" stroke-opacity="0.4"/>
+    <text x="297" y="321" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#46e0a8">AR</text>
+    <text x="321" y="312" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#eef3fb">software-architect</text>
+    <text x="321" y="330" font-size="10" fill="#9aa7c2">Design &amp; breakdown</text>
+    <circle cx="465" cy="304" r="3.5" fill="#46e0a8"/>
+  </g>
+  <!-- IMPLEMENT: backend (working) -->
+  <g>
+    <rect x="494" y="290" width="210" height="54" rx="12" fill="#34dbf0" fill-opacity="0.06" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <rect x="506" y="302" width="28" height="28" rx="8" fill="#34dbf0" fill-opacity="0.16" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <text x="520" y="321" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#34dbf0">BE</text>
+    <text x="544" y="312" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#eef3fb">backend-senior</text>
+    <text x="544" y="330" font-size="10" fill="#9aa7c2">Billing API &amp; webhooks</text>
+    <circle cx="688" cy="304" r="3.5" fill="#34dbf0"/>
+    <rect x="506" y="335" width="90" height="2.5" rx="1.25" fill="#34dbf0" fill-opacity="0.8"/>
+  </g>
+  <!-- IMPLEMENT: frontend (working) -->
+  <g>
+    <rect x="494" y="354" width="210" height="54" rx="12" fill="#34dbf0" fill-opacity="0.06" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <rect x="506" y="366" width="28" height="28" rx="8" fill="#34dbf0" fill-opacity="0.16" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <text x="520" y="385" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#34dbf0">FE</text>
+    <text x="544" y="376" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#eef3fb">frontend-senior</text>
+    <text x="544" y="394" font-size="10" fill="#9aa7c2">Checkout UI &amp; states</text>
+    <circle cx="688" cy="368" r="3.5" fill="#34dbf0"/>
+    <rect x="506" y="399" width="64" height="2.5" rx="1.25" fill="#34dbf0" fill-opacity="0.8"/>
+  </g>
+  <!-- IMPLEMENT: devops (working) -->
+  <g>
+    <rect x="494" y="418" width="210" height="54" rx="12" fill="#34dbf0" fill-opacity="0.06" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <rect x="506" y="430" width="28" height="28" rx="8" fill="#34dbf0" fill-opacity="0.16" stroke="#34dbf0" stroke-opacity="0.5"/>
+    <text x="520" y="449" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#34dbf0">DO</text>
+    <text x="544" y="440" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#eef3fb">devops-engineer</text>
+    <text x="544" y="458" font-size="10" fill="#9aa7c2">Secrets &amp; deploy</text>
+    <circle cx="688" cy="432" r="3.5" fill="#34dbf0"/>
+    <rect x="506" y="463" width="104" height="2.5" rx="1.25" fill="#34dbf0" fill-opacity="0.8"/>
+  </g>
+  <!-- TEST: qa (queued) -->
+  <g>
+    <rect x="717" y="290" width="210" height="54" rx="12" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.10" stroke-dasharray="4 4"/>
+    <rect x="729" y="302" width="28" height="28" rx="8" fill="#ffffff" fill-opacity="0.05" stroke="#9aa7c2" stroke-opacity="0.35"/>
+    <text x="743" y="321" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#9aa7c2">QA</text>
+    <text x="767" y="312" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#aeb9d2">qa-test-senior</text>
+    <text x="767" y="330" font-size="10" fill="#9aa7c2">Verify &amp; edge cases</text>
+    <text x="911" y="307" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="8" letter-spacing="1" fill="#9aa7c2">QUEUED</text>
+  </g>
+  <!-- DELIVER: team-lead (queued) -->
+  <g>
+    <rect x="940" y="290" width="210" height="54" rx="12" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.10" stroke-dasharray="4 4"/>
+    <rect x="952" y="302" width="28" height="28" rx="8" fill="#ffffff" fill-opacity="0.05" stroke="#9aa7c2" stroke-opacity="0.35"/>
+    <text x="966" y="321" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#9aa7c2">TL</text>
+    <text x="990" y="312" font-family="ui-monospace,Menlo,monospace" font-size="12.5" fill="#aeb9d2">team-lead</text>
+    <text x="990" y="330" font-size="10" fill="#9aa7c2">Integrate &amp; ship</text>
+    <text x="1134" y="307" text-anchor="end" font-family="ui-monospace,Menlo,monospace" font-size="8" letter-spacing="1" fill="#9aa7c2">QUEUED</text>
+  </g>
+
+  <!-- footer activity hint -->
+  <text x="48" y="508" font-family="ui-monospace,Menlo,monospace" font-size="10.5" fill="#5f6c86">› software-architect → done · data model + work breakdown    › backend-senior → working · implementing /charges + webhook</text>
+</svg>
