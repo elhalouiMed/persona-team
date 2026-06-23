@@ -175,8 +175,9 @@ const agentsArr=()=>S?S.order.map(id=>S.agents[id]).filter(Boolean):[];
 function buildGraph(){
   const want=new Map(),edges=[],phases=(S.phases||[]),ags=agentsArr();
   want.set('__hub',{id:'__hub',type:'hub',label:'Orchestrator',r:30});
-  let prev='__hub'; const phaseIds=[];
-  phases.forEach(p=>{const pid='phase:'+p.name;phaseIds.push(pid);want.set(pid,{id:pid,type:'phase',label:p.name,r:20});edges.push({a:prev,b:pid});prev=pid;});
+  const phaseIds=[];
+  // org-chart: orchestrator is the ROOT and links to every phase (not a chain).
+  phases.forEach(p=>{const pid='phase:'+p.name;phaseIds.push(pid);want.set(pid,{id:pid,type:'phase',label:p.name,r:20});edges.push({a:'__hub',b:pid});});
   ags.forEach(a=>{const pid='phase:'+(a.phase||'');const parent=want.has(pid)?pid:(phaseIds[0]||'__hub');
     want.set(a.id,{id:a.id,type:'agent',label:a.id,r:26,parent});edges.push({a:parent,b:a.id});});
   const oldK=[...NODES.keys()].sort().join(','),newK=[...want.keys()].sort().join(',');
@@ -189,19 +190,29 @@ function buildGraph(){
 }
 
 /* ── deterministic layered layout (targets tx,ty in world space) ── */
-const PX=250, AY0=150, AYH=98;
+const LY=200, AW=168, PHGAP=70;
+/* tidy top-down org chart: root (hub) -> phases row -> agents fanned under each phase.
+   Each phase claims horizontal width = (#agents) slots, so subtrees never overlap. */
 function layout(){
   const phases=S.phases||[];
-  const hub=NODES.get('__hub'); if(hub){hub.tx=0;hub.ty=0;}
-  phases.forEach((p,k)=>{const n=NODES.get('phase:'+p.name);if(n){n.tx=(k+1)*PX;n.ty=0;}});
+  const order=new Map(agentsArr().map((a,i)=>[a.id,i]));
   const kids={};
   for(const n of NODES.values())if(n.type==='agent')(kids[n.parent]=kids[n.parent]||[]).push(n);
-  // keep agent order stable to S.order
-  const order=new Map(agentsArr().map((a,i)=>[a.id,i]));
-  for(const pid in kids){
-    const parent=NODES.get(pid), px=parent?(parent.tx||0):0, py=parent?(parent.ty||0):0;
-    const list=kids[pid].sort((a,b)=>(order.get(a.id)||0)-(order.get(b.id)||0));
-    list.forEach((n,j)=>{ n.tx=px+(j%2?26:-26); n.ty=py+AY0+j*AYH; });
+  for(const k in kids)kids[k].sort((a,b)=>(order.get(a.id)||0)-(order.get(b.id)||0));
+  const hub=NODES.get('__hub');
+  const phaseNodes=phases.map(p=>NODES.get('phase:'+p.name)).filter(Boolean);
+  if(phaseNodes.length){
+    let cursor=0; const centers=[];
+    phaseNodes.forEach(pn=>{
+      const ags=kids[pn.id]||[]; const w=Math.max(1,ags.length)*AW; const sx=cursor;
+      ags.forEach((n,i)=>{ n.tx=sx+(i+0.5)*AW; n.ty=2*LY; });
+      pn.tx=sx+w/2; pn.ty=LY; centers.push(pn.tx); cursor=sx+w+PHGAP;
+    });
+    if(hub){ hub.tx=(centers[0]+centers[centers.length-1])/2; hub.ty=0; }
+  } else {
+    const ags=kids['__hub']||[]; const w=Math.max(1,ags.length)*AW;
+    ags.forEach((n,i)=>{ n.tx=(i+0.5)*AW; n.ty=LY; });
+    if(hub){ hub.tx=w/2; hub.ty=0; }
   }
   for(const n of NODES.values())if(n.tx==null){n.tx=0;n.ty=0;}
 }
@@ -218,14 +229,20 @@ function step(){
   }
   draw(); raf=moving?requestAnimationFrame(step):0;
 }
-function curve(a,b){
-  const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy)||1,k=Math.min(36,L*0.16);
-  const cx=(a.x+b.x)/2+(-dy/L)*k, cy=(a.y+b.y)/2+(dx/L)*k;
-  return 'M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+'Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+b.x.toFixed(1)+' '+b.y.toFixed(1);
+/* rounded elbow connector (org-chart style): down → across → down */
+function link(a,b){
+  const x1=a.x,y1=a.y,x2=b.x,y2=b.y,my=(y1+y2)/2,r=14,dir=x2>x1?1:-1;
+  if(Math.abs(x2-x1)<2) return 'M'+x1.toFixed(1)+' '+y1.toFixed(1)+'L'+x2.toFixed(1)+' '+y2.toFixed(1);
+  return 'M'+x1.toFixed(1)+' '+y1.toFixed(1)
+    +'V'+(my-r).toFixed(1)
+    +'Q'+x1.toFixed(1)+' '+my.toFixed(1)+' '+(x1+dir*r).toFixed(1)+' '+my.toFixed(1)
+    +'H'+(x2-dir*r).toFixed(1)
+    +'Q'+x2.toFixed(1)+' '+my.toFixed(1)+' '+x2.toFixed(1)+' '+(my+r).toFixed(1)
+    +'V'+y2.toFixed(1);
 }
 function draw(){
   for(const [id,n] of NODES){const el=nodeEls.get(id);if(el&&n.x!=null)el.setAttribute('transform','translate('+n.x.toFixed(1)+','+n.y.toFixed(1)+')');}
-  for(const e of EDGES){const a=NODES.get(e.a),b=NODES.get(e.b),el=edgeEls.get(e.a+'>'+e.b);if(a&&b&&el&&a.x!=null)el.setAttribute('d',curve(a,b));}
+  for(const e of EDGES){const a=NODES.get(e.a),b=NODES.get(e.b),el=edgeEls.get(e.a+'>'+e.b);if(a&&b&&el&&a.x!=null)el.setAttribute('d',link(a,b));}
 }
 
 /* ── view: fit / zoom / pan ── */
