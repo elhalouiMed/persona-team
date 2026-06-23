@@ -134,16 +134,16 @@
 <script>
 "use strict";
 const AV={
-  'business-analyst':{c:'#6366f1',g:'<rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 3.5h6V6H9z"/><path d="M9 10h6M9 13.5h4"/>'},
-  'product-owner':{c:'#0d9488',g:'<circle cx="12" cy="12" r="8"/><path d="M15 9l-2.4 5.4L7 17l2.6-5.6z"/>'},
-  'software-architect':{c:'#2563eb',g:'<path d="M3 9l9-5 9 5"/><path d="M6 9.5v8M10 9.5v8M14 9.5v8M18 9.5v8"/><path d="M4 20.5h16"/>'},
-  'team-lead':{c:'#d97706',g:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.1"/>'},
-  'backend-senior':{c:'#0891b2',g:'<rect x="3.5" y="5" width="17" height="6" rx="1.6"/><rect x="3.5" y="13" width="17" height="6" rx="1.6"/><path d="M7 8h.01M7 16h.01"/>'},
-  'frontend-senior':{c:'#db2777',g:'<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 9h17"/><path d="M7 13h5"/>'},
-  'fullstack-senior':{c:'#7c3aed',g:'<path d="M12 3.5l8.5 4.5-8.5 4.5L3.5 8z"/><path d="M3.5 12.5l8.5 4.5 8.5-4.5"/>'},
-  'devops-engineer':{c:'#16a34a',g:'<path d="M12 3c2.8 1.8 4 5.2 4 8.5L12 15l-4-3.5C8 8.2 9.2 4.8 12 3z"/><circle cx="12" cy="9" r="1.6"/><path d="M8 15.5l-2.5 4M16 15.5l2.5 4"/>'},
-  'qa-test-senior':{c:'#dc2626',g:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/><path d="M8 10.5l2 2 3.5-3.5"/>'},
-  'senior-recruiter':{c:'#ea580c',g:'<circle cx="12" cy="8" r="3.6"/><path d="M5.5 20c0-3.8 3-6 6.5-6s6.5 2.2 6.5 6"/>'}
+  'business-analyst':{c:'#6366f1',e:'📋'},
+  'product-owner':{c:'#0d9488',e:'🗺️'},
+  'software-architect':{c:'#2563eb',e:'🏛️'},
+  'team-lead':{c:'#d97706',e:'🎯'},
+  'backend-senior':{c:'#0891b2',e:'⚙️'},
+  'frontend-senior':{c:'#db2777',e:'🎨'},
+  'fullstack-senior':{c:'#7c3aed',e:'🧩'},
+  'devops-engineer':{c:'#16a34a',e:'🚀'},
+  'qa-test-senior':{c:'#dc2626',e:'🧪'},
+  'senior-recruiter':{c:'#ea580c',e:'🧲'}
 };
 const CFG={
   'business-analyst':{model:'sonnet',tools:['Read','Grep','Glob','WebSearch','WebFetch'],blurb:'Turns vague requests into crisp requirements, user stories, acceptance criteria and explicit scope.'},
@@ -157,7 +157,7 @@ const CFG={
   'qa-test-senior':{model:'opus',tools:['Read','Edit','Write','Bash','Grep','Glob'],blurb:'Writes & runs tests, finds edge cases and adversarially verifies work against acceptance criteria.'},
   'senior-recruiter':{model:'sonnet',tools:['Read','Grep','Glob','WebSearch','WebFetch'],blurb:'20-yr recruiter: sourcing strategy, screening, JD design, interview rubrics, outreach, talent insight.'}
 };
-const glyph=id=>{const a=AV[id];if(!a)return '';return '<g class="glyph" transform="translate(-12,-12)" fill="none" stroke="'+a.c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+a.g+'</g>';};
+const emo=id=>(AV[id]&&AV[id].e)||'🤖';
 const colorOf=id=>(AV[id]||{c:'#8a92a6'}).c;
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
 const fmt=ms=>{if(ms<0)ms=0;const s=Math.floor(ms/1000),m=Math.floor(s/60);return (m?m+'m ':'')+(s%60)+'s';};
@@ -280,9 +280,7 @@ function buildDom(){
     let el=nodeEls.get(id);
     if(!el){
       el=mk('g','node');el.dataset.id=id;
-      el.append(mk('circle','pulse'),mk('circle','ring'),mk('circle','disc'));
-      if(n.type==='agent')el.insertAdjacentHTML('beforeend',glyph(id)); else el.appendChild(mk('text','ic'));
-      el.appendChild(mk('text','lbl'));
+      el.append(mk('circle','pulse'),mk('circle','ring'),mk('circle','disc'),mk('text','ic'),mk('text','lbl'));
       gNodes.appendChild(el);nodeEls.set(id,el);attachNode(el,id);
     }
     const r=n.r,ring=el.querySelector('.ring'),disc=el.querySelector('.disc'),pulse=el.querySelector('.pulse');
@@ -291,7 +289,11 @@ function buildDom(){
     const col=n.type==='agent'?colorOf(id):(n.type==='hub'?'var(--accent)':'#64748b');
     disc.style.fill='color-mix(in srgb,'+col+' 20%, var(--panel))';
     disc.style.stroke='color-mix(in srgb,'+col+' 55%, transparent)';
-    const ic=el.querySelector('.ic');if(ic){ic.textContent=n.type==='hub'?'◎':'◆';ic.setAttribute('text-anchor','middle');ic.setAttribute('dy','5');ic.style.fill=col;ic.setAttribute('font-size',n.type==='hub'?'20':'14');}
+    const ic=el.querySelector('.ic');
+    ic.setAttribute('text-anchor','middle'); ic.setAttribute('dominant-baseline','central'); ic.removeAttribute('style');
+    if(n.type==='agent'){ ic.textContent=emo(id); ic.setAttribute('font-size',(r-7)); }
+    else if(n.type==='hub'){ ic.textContent='🧠'; ic.setAttribute('font-size','26'); }
+    else { ic.textContent='◆'; ic.style.fill=col; ic.setAttribute('font-size','14'); }
     const lbl=el.querySelector('.lbl');lbl.textContent=n.type==='hub'?'Orchestrator':n.label;lbl.setAttribute('y',r+17);
   }
   applyStatus();
@@ -316,7 +318,7 @@ function showTip(id,e){
   const n=NODES.get(id);if(!n)return;const st=statusOf(n);
   let logs=n.type==='agent'?S.logs.filter(l=>l.message&&l.message.includes(id)):(n.type==='phase'?S.logs.filter(l=>l.message&&l.message.toLowerCase().includes(n.label.toLowerCase())):S.logs);
   logs=logs.slice(-5).reverse();
-  const head=n.type==='agent'?'<div class="h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+colorOf(id)+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(AV[id]?AV[id].g:'')+'</svg><b>'+esc(id)+'</b><span class="s">'+st+'</span></div>':'<div class="h"><b>'+esc(n.label)+'</b><span class="s">'+st+'</span></div>';
+  const head=n.type==='agent'?'<div class="h"><span style="font-size:15px">'+emo(id)+'</span><b>'+esc(id)+'</b><span class="s">'+st+'</span></div>':'<div class="h"><b>'+esc(n.label)+'</b><span class="s">'+st+'</span></div>';
   const body=logs.length?logs.map(l=>'<div class="ln"><span class="t">'+(l.ts||'').slice(11,19)+'</span>'+esc(l.message)+'</div>').join(''):'<div class="empty">no activity yet</div>';
   const tip=$('tip');tip.innerHTML=head+body;tip.style.display='block';moveTip(e);
 }
@@ -331,7 +333,7 @@ function renderPanel(){
   const feed=(S&&S.logs?S.logs:[]).slice(-60).reverse().map(l=>'<div class="li"><span class="t">'+(l.ts||'').slice(11,19)+'</span>'+esc(l.message)+'</div>').join('')||'<div class="li" style="opacity:.5">waiting for events…</div>';
   p.innerHTML='<div class="pad"><div class="sec" style="border:0;padding:0;margin-top:0">Legend</div><div class="legend"><span><i style="background:var(--accent)"></i>working</span><span><i style="background:#46e0a8"></i>done</span><span><i style="background:#ffcb45"></i>waiting</span><span><i style="background:#fb7185"></i>blocked</span></div><div class="hint">The graph auto-arranges &amp; fits the screen. <b>Scroll</b> to zoom · <b>drag</b> empty space to pan · <b>⊡</b> re-fits · hover a node for logs · click for detail &amp; config.</div><div class="sec">Activity</div></div><div class="feed">'+feed+'</div>';
 }
-function mini(id){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+colorOf(id)+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(AV[id]?AV[id].g:'')+'</svg>';}
+function mini(id){return '<span style="font-size:15px;line-height:1">'+emo(id)+'</span>';}
 function detailHTML(id){
   const n=NODES.get(id);
   if(n.type!=='agent'){
@@ -341,7 +343,7 @@ function detailHTML(id){
   }
   const a=S.agents[id]||{},cfg=CFG[id]||{model:'—',tools:[],blurb:''},c=colorOf(id);
   const logs=S.logs.filter(l=>l.message&&l.message.includes(id)).slice(-40).reverse();
-  return '<div class="pad"><div class="phead"><div class="pav" style="background:color-mix(in srgb,'+c+' 16%,var(--panel));border-color:'+c+'55"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(AV[id]?AV[id].g:'')+'</svg></div><div><div class="pname">'+esc(id)+'</div><div class="prole">'+esc(a.role||'')+'</div></div></div><div style="margin-top:12px"><span class="chip '+(a.status||'waiting')+'">'+(a.status||'waiting')+'</span></div><div class="kv"><span class="k">Phase</span><span class="v">'+esc(a.phase||'—')+'</span><span class="k">Status</span><span class="v">'+esc(a.status||'waiting')+'</span><span class="k">Elapsed</span><span class="v">'+(dur(a)||'—')+'</span><span class="k">Note</span><span class="v">'+esc(a.note||'—')+'</span></div><div class="sec">Config</div><div class="kv"><span class="k">Model</span><span class="v mono">'+esc(cfg.model)+'</span></div><div style="margin-top:10px" class="tools">'+cfg.tools.map(t=>'<span class="tool">'+esc(t)+'</span>').join('')+'</div><div class="blurb" style="margin-top:12px">'+esc(cfg.blurb)+'</div><div class="sec">Activity</div></div><div class="feed">'+(logs.map(l=>'<div class="li"><span class="t">'+(l.ts||'').slice(11,19)+'</span>'+esc(l.message)+'</div>').join('')||'<div class="li" style="opacity:.5">no activity yet</div>')+'</div>';
+  return '<div class="pad"><div class="phead"><div class="pav" style="background:color-mix(in srgb,'+c+' 16%,var(--panel));border-color:'+c+'55;font-size:24px">'+emo(id)+'</div><div><div class="pname">'+esc(id)+'</div><div class="prole">'+esc(a.role||'')+'</div></div></div><div style="margin-top:12px"><span class="chip '+(a.status||'waiting')+'">'+(a.status||'waiting')+'</span></div><div class="kv"><span class="k">Phase</span><span class="v">'+esc(a.phase||'—')+'</span><span class="k">Status</span><span class="v">'+esc(a.status||'waiting')+'</span><span class="k">Elapsed</span><span class="v">'+(dur(a)||'—')+'</span><span class="k">Note</span><span class="v">'+esc(a.note||'—')+'</span></div><div class="sec">Config</div><div class="kv"><span class="k">Model</span><span class="v mono">'+esc(cfg.model)+'</span></div><div style="margin-top:10px" class="tools">'+cfg.tools.map(t=>'<span class="tool">'+esc(t)+'</span>').join('')+'</div><div class="blurb" style="margin-top:12px">'+esc(cfg.blurb)+'</div><div class="sec">Activity</div></div><div class="feed">'+(logs.map(l=>'<div class="li"><span class="t">'+(l.ts||'').slice(11,19)+'</span>'+esc(l.message)+'</div>').join('')||'<div class="li" style="opacity:.5">no activity yet</div>')+'</div>';
 }
 
 /* ── lifecycle ── */
