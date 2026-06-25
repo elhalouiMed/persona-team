@@ -95,8 +95,9 @@ for md in "$SRC/agents/"*.md; do
   copy_file "$md" "$CLAUDE_DIR/agents/$(basename "$md")"
 done
 
-# command
+# commands
 copy_file "$SRC/commands/build-team.md" "$CLAUDE_DIR/commands/build-team.md"
+copy_file "$SRC/commands/build-context.md" "$CLAUDE_DIR/commands/build-context.md"
 
 # usage reference
 copy_file "$SRC/PERSONA-TEAM.md" "$CLAUDE_DIR/PERSONA-TEAM.md"

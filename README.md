@@ -28,36 +28,43 @@ No API keys. No per-token bill. One Claude Code subscription handles it all.
 
 ### Prerequisites
 
-- [Claude Code](https://claude.ai/code) subscription (required — no API key alternative)
-- Node.js 18+
-- macOS or Linux
+- A [Claude Code](https://claude.ai/code) subscription (required — there is no API-key mode)
+- Node.js 18+ — [nodejs.org](https://nodejs.org)
+- macOS, Linux, **or Windows**
 
-### One-liner
+### macOS / Linux
 
 ```bash
+# one-liner
 curl -fsSL https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/persona-team/main/install.sh | bash
+
+# …or clone
+git clone https://github.com/YOUR_GITHUB_USERNAME/persona-team && cd persona-team && bash install.sh
 ```
 
-### Or clone and run
+### Windows (PowerShell)
 
-```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/persona-team
-cd persona-team
-bash install.sh
+```powershell
+# one-liner
+irm https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/persona-team/main/install.ps1 | iex
+
+# …or clone
+git clone https://github.com/YOUR_GITHUB_USERNAME/persona-team; cd persona-team; powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-### What gets installed (all global, nothing inside your repo)
+> You can also use **Git Bash** or **WSL** on Windows and run `bash install.sh`. Claude Code's shell on Windows is Git Bash, so the live dashboard behaves the same everywhere.
 
-| Path | What it is |
+### What gets installed (all global — nothing inside your project)
+
+| Path (`~` = your home directory) | What it is |
 |---|---|
-| `~/.claude/agents/*.md` | 10 persona system-prompt files |
-| `~/.claude/commands/build-team.md` | The `/build-team` slash command |
+| `~/.claude/agents/*.md` | 10 engineering persona system-prompts |
+| `~/.claude/commands/build-team.md` | The `/build-team` orchestrator command |
+| `~/.claude/commands/build-context.md` | The `/build-context` project-analysis command |
 | `~/.claude/PERSONA-TEAM.md` | Full usage reference |
-| `~/.claude/persona-team/server.mjs` | Zero-dep Node 18+ dashboard server |
-| `~/.claude/persona-team/public/index.html` | Live dashboard UI |
-| `~/.claude/persona-team/pt.mjs` | CLI event emitter (called by the orchestrator) |
+| `~/.claude/persona-team/{server.mjs, pt.mjs, public/index.html}` | The live dashboard (zero-dependency Node) |
 
-No global npm packages. No daemons. Nothing added to your `PATH` unless you want it.
+No global npm packages, no daemons, nothing added to your `PATH`. Re-running the installer backs up any file it changes to `*.bak`.
 
 ---
 
@@ -65,13 +72,17 @@ No global npm packages. No daemons. Nothing added to your `PATH` unless you want
 
 1. Install (see above).
 2. Open Claude Code in any project directory.
-3. Run the command:
+3. **(Recommended) Prime the project** — deep-analyzes your codebase, asks a few questions, and generates domain-aware expert personas + a context brief:
+   ```
+   /build-context
+   ```
+4. **Assemble the team and ship:**
    ```
    /build-team <describe your task here>
    ```
-4. Open **http://localhost:7331** in your browser — the dashboard starts automatically on step 3.
+5. Open **http://localhost:7331** — the dashboard starts automatically.
 
-The orchestrator will classify your task, select the right personas, assign phases, and fan out. Watch the cards animate across the pipeline columns as agents pick up work.
+`/build-context` tailors the crew to your domain (fintech → banking/compliance experts, commercial → sales/pricing experts, …). `/build-team` then classifies the task, loads that context, selects the right personas, assigns phases, and fans out — watch them work live on the graph.
 
 ---
 

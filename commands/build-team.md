@@ -31,6 +31,10 @@ Then IMMEDIATELY print the link to the user as visible text on its own line (so 
 
 (It reuses an already-running instance; override the port with `PERSONA_TEAM_PORT`. The dashboard reads events only — no API keys, nothing leaves the machine.)
 
+## STEP 0.5 — Load project context (if `/build-context` was run)
+If `./.claude/persona-team/context.md` exists, READ it — it is the project's domain brief; weave its key points into every persona prompt you spawn so the team reasons in-domain. Also read `./.claude/persona-team/team.md` (recommended roster) if present, and list `./.claude/agents/*.md` for any project domain-expert personas (e.g. `banking-domain-expert`, `compliance-officer`, `commercial-strategist`, or a user persona). Include the RELEVANT domain personas alongside the global engineering personas in your team, using each file's `name` as the `agentType` (and as the `team`/`status` id on the dashboard).
+If no `context.md` exists, proceed with the global team as usual — and suggest the user run **`/build-context`** first for a domain-aware run.
+
 ## STEP 1 — Classify
 Decide the task type: **software** (ship code), **recruitment/business** (sourcing, screening, JD, outreach, reports, market advice), or **mixed**.
 

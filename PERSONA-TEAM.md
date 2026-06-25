@@ -23,6 +23,8 @@ Installed 2026-06-19.
 
 **Orchestrator** — `~/.claude/commands/build-team.md` → the `/build-team` command.
 
+**Context builder** — `~/.claude/commands/build-context.md` → the `/build-context` command. Run it FIRST in a project: it deep-analyzes the codebase, asks a few targeted questions, then generates **project-scoped domain-expert personas** (e.g. `banking-domain-expert`, `compliance-officer`, `commercial-strategist`, plus an end-user persona) into `./.claude/agents/` and a brief at `./.claude/persona-team/context.md`. `/build-team` auto-loads that context + those personas for a domain-aware run.
+
 ## How to use it (Tier 1 — today, in VS Code)
 
 In any project, run:
