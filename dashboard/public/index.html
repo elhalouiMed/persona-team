@@ -7,10 +7,10 @@
 <script>try{var t=localStorage.getItem('pt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <style>
   :root[data-theme="dark"]{
-    --bg:#080a11; --bg2:#0c0f18; --panel:#121726; --panel-2:#0e1320;
-    --line:#222a3d; --line-2:#1a2030; --txt:#e9edf7; --muted:#9aa6c0; --muted-2:#7c879e;
-    --accent:#7c8bff; --shadow:0 8px 30px rgba(0,0,0,.35); --edge:#2c3650; --edge-active:#6b78ff;
-    --dots:rgba(255,255,255,.04); --botbody:#e9eefb; --botface:#0a0f1c; --eye:#5fe3ff;
+    --bg:#08090a; --bg2:#0b0e12; --panel:#11161d; --panel-2:#0c1015;
+    --line:#222a31; --line-2:#191f29; --txt:#e9edf7; --muted:#9aa6b8; --muted-2:#7c8696;
+    --accent:#49fb91; --shadow:0 8px 30px rgba(0,0,0,.45); --edge:#27313e; --edge-active:#49fb91;
+    --dots:rgba(73,251,145,.05); --botbody:#e9eefb; --botface:#0a0f1c; --eye:#85ecff;
   }
   :root[data-theme="light"]{
     --bg:#eef1f7; --bg2:#f6f8fc; --panel:#ffffff; --panel-2:#f7f9fd;
@@ -25,7 +25,9 @@
 
   header{position:fixed;top:0;left:0;right:0;height:58px;z-index:20;display:flex;align-items:center;gap:14px;
     padding:0 18px;background:color-mix(in srgb,var(--panel) 90%,transparent);border-bottom:1px solid var(--line)}
-  .logo{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,#5b6cff,#9b5bff);color:#fff;font-weight:800;font-size:14px}
+  .logo{width:30px;height:30px;display:grid;place-items:center;flex:none}
+  #wm{position:absolute;left:16px;bottom:13px;z-index:6;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);opacity:.92;pointer-events:none;letter-spacing:.01em}
+  #wm b{color:var(--txt);font-weight:700} #wm .by{color:var(--muted-2)}
   .ttl{font-weight:700;font-size:14px;white-space:nowrap}
   .ttl small{display:block;color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
   .task{flex:1;min-width:0;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -109,8 +111,8 @@
 </head>
 <body>
   <header>
-    <div class="logo">P</div>
-    <div class="ttl">Persona Team<small>Graph</small></div>
+    <div class="logo"><svg viewBox="0 0 192 192" width="26" height="26"><g fill="#49fb91"><path d="M192 131.263V192H121.118L60.6859 131.263H192Z"/><path d="M60.6859 131.263H0V191.994H60.6859V131.263Z"/><path d="M60.6859 0V131.424L0 70.3172V0H60.6859Z"/></g></svg></div>
+    <div class="ttl">Linkopus<small>Persona Team · agent graph</small></div>
     <div class="task" id="task">Waiting for a run…</div>
     <div class="mini">
       <span class="m"><b id="sTotal">0</b> agents</span>
@@ -131,6 +133,7 @@
   <div id="stage">
     <svg id="svg"><g id="viewport"><g id="edges"></g><g id="nodes"></g></g></svg>
     <div class="empty-graph" id="emptyGraph"><div><h2>No team assembled yet</h2>Run <code>/build-team &lt;task&gt;</code> and watch the agent graph come alive.</div></div>
+    <div id="wm"><svg viewBox="0 0 192 192" width="15" height="15"><g fill="#49fb91"><path d="M192 131.263V192H121.118L60.6859 131.263H192Z"/><path d="M60.6859 131.263H0V191.994H60.6859V131.263Z"/><path d="M60.6859 0V131.424L0 70.3172V0H60.6859Z"/></g></svg><span><span class="by">crafted by</span> <b>Mohammed ELHALOUI</b> · linkopus.com</span></div>
   </div>
 
   <aside><div class="scroll" id="panel"></div></aside>
@@ -179,7 +182,7 @@ const GLYPH={
 const HUBGLYPH='<circle cx="7" cy="12" r="2.4"/><circle cx="17" cy="6.5" r="2.4"/><circle cx="17" cy="17.5" r="2.4"/><path d="M9 11l6-3.4M9 13l6 3.4"/>';
 /* a friendly robot: face screen (eyes+smile) + body with a chest screen showing the role glyph */
 function robotMarkup(id,type){
-  const C=type==='hub'?'#7c8bff':colorOf(id), G=type==='hub'?HUBGLYPH:(GLYPH[id]||''), s=type==='hub'?1.16:1;
+  const C=type==='hub'?'#49fb91':colorOf(id), G=type==='hub'?HUBGLYPH:(GLYPH[id]||''), s=type==='hub'?1.16:1;
   return '<g class="bot" transform="scale('+s+')">'
     +'<rect x="-27" y="-35" width="54" height="66" fill="#000" opacity="0" pointer-events="all"/>'
     +'<ellipse class="glow" cx="0" cy="0" rx="31" ry="33" fill="'+C+'"/>'
