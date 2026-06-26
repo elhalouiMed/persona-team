@@ -19,8 +19,6 @@ Installed 2026-06-19.
 | `fullstack-senior` | End-to-end vertical slices | opus |
 | `devops-engineer` | CI/CD, deploy, infra, secrets | sonnet |
 | `qa-test-senior` | Tests + adversarial verification | opus |
-| `senior-recruiter` | 20-yr recruitment expert (sourcing, screening, JD, outreach, advice) | sonnet |
-
 **Orchestrator** — `~/.claude/commands/build-team.md` → the `/build-team` command.
 
 **Context builder** — `~/.claude/commands/build-context.md` → the `/build-context` command. Run it FIRST in a project: it deep-analyzes the codebase, asks a few targeted questions, then generates **project-scoped domain-expert personas** (e.g. `banking-domain-expert`, `compliance-officer`, `commercial-strategist`, plus an end-user persona) into `./.claude/agents/` and a brief at `./.claude/persona-team/context.md`. `/build-team` auto-loads that context + those personas for a domain-aware run.
@@ -32,13 +30,13 @@ In any project, run:
 ```
 /build-team add a CSV export button to the prospects table, with backend endpoint and tests
 ```
-or a recruitment task:
+or a business / domain task (after `/build-context` has tailored the experts):
 ```
-/build-team source and screen 10 senior commercial profiles for a fintech SDR role in Paris, with a shortlist and outreach
+/build-team produce a technical + functional audit of the billing module with a prioritized roadmap
 ```
 
 What happens:
-1. The orchestrator **classifies** the task (software / recruitment / mixed).
+1. The orchestrator **classifies** the task (software / business / mixed).
 2. It **picks the right personas** and shows you the team + plan.
 3. It runs a **Workflow** that dispatches sub-tasks — **independent ones in parallel** (up to 16 agents at once), dependent ones pipelined.
 4. It **integrates** everything into one delivery and reports an honest status.
@@ -56,7 +54,7 @@ Open it in your browser and watch the team work in real time — a futuristic pi
 
 You can also just call a single persona directly, e.g.:
 ```
-Use the senior-recruiter agent to write an outcomes-based JD for a Head of Sales.
+Use the software-architect agent to propose a data model for the billing module.
 ```
 
 ## Tuning

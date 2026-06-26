@@ -25,7 +25,7 @@ Use **AskUserQuestion** to fill the gaps you could NOT derive from code. Ask onl
 Create **`./.claude/persona-team/context.md`** (project-scoped). Sections: Project & domain summary · Product, users & business model · Architecture & stack · Conventions & standards · Domain glossary · Constraints & compliance · Goals & non-goals · Open risks/assumptions. Make it information-dense, accurate, and current — this is the shared brief every persona and every `/build-team` run will read.
 
 ## STEP 4 — Design & generate the domain-expert personas
-Decide which DOMAIN experts this project needs (these complement the global engineering team — `business-analyst`, `product-owner`, `software-architect`, `team-lead`, `backend-senior`, `frontend-senior`, `fullstack-senior`, `devops-engineer`, `qa-test-senior`, `senior-recruiter`). Examples:
+Decide which DOMAIN experts this project needs (these complement the global engineering team — `business-analyst`, `product-owner`, `software-architect`, `team-lead`, `backend-senior`, `frontend-senior`, `fullstack-senior`, `devops-engineer`, `qa-test-senior`). A recruiter, banking expert, etc. are DOMAIN personas — generate them here per project, don't assume them. Examples:
 - **Fintech / banking:** `banking-domain-expert`, `compliance-officer` (KYC/AML/PSD2), `risk-analyst`, `payments-architect`, + a user persona `retail-banking-customer`.
 - **Commercial / sales product:** `commercial-strategist`, `sales-domain-expert`, `pricing-analyst`, + a buyer persona `b2b-buyer`.
 - **Health / commerce / logistics / etc.:** the equivalent senior domain experts + one representative end-user persona.

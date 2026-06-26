@@ -166,8 +166,7 @@ const AV={
   'frontend-senior':{c:'#db2777',e:'🎨'},
   'fullstack-senior':{c:'#7c3aed',e:'🧩'},
   'devops-engineer':{c:'#16a34a',e:'🚀'},
-  'qa-test-senior':{c:'#dc2626',e:'🧪'},
-  'senior-recruiter':{c:'#ea580c',e:'🧲'}
+  'qa-test-senior':{c:'#dc2626',e:'🧪'}
 };
 const CFG={
   'business-analyst':{model:'sonnet',tools:['Read','Grep','Glob','WebSearch','WebFetch'],blurb:'Turns vague requests into crisp requirements, user stories, acceptance criteria and explicit scope.'},
@@ -178,8 +177,7 @@ const CFG={
   'frontend-senior':{model:'opus',tools:['Read','Edit','Write','Bash','Grep','Glob'],blurb:'UI components, state, data fetching, accessibility and UX polish.'},
   'fullstack-senior':{model:'opus',tools:['Read','Edit','Write','Bash','Grep','Glob'],blurb:'Owns a vertical slice end to end — DB → API → UI.'},
   'devops-engineer':{model:'sonnet',tools:['Read','Edit','Write','Bash','Grep','Glob'],blurb:'CI/CD, build & deploy config, environments, secrets, containers, infra and observability.'},
-  'qa-test-senior':{model:'opus',tools:['Read','Edit','Write','Bash','Grep','Glob'],blurb:'Writes & runs tests, finds edge cases and adversarially verifies work against acceptance criteria.'},
-  'senior-recruiter':{model:'sonnet',tools:['Read','Grep','Glob','WebSearch','WebFetch'],blurb:'20-yr recruiter: sourcing strategy, screening, JD design, interview rubrics, outreach, talent insight.'}
+  'qa-test-senior':{model:'opus',tools:['Read','Edit','Write','Bash','Grep','Glob'],blurb:'Writes & runs tests, finds edge cases and adversarially verifies work against acceptance criteria.'}
 };
 const emo=id=>(AV[id]&&AV[id].e)||'🤖';
 /* role glyphs shown on each robot's chest screen (24x24 line icons) */
@@ -192,8 +190,7 @@ const GLYPH={
   'frontend-senior':'<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 9h17"/><path d="M7 13h5"/>',
   'fullstack-senior':'<path d="M12 3.5l8.5 4.5-8.5 4.5L3.5 8z"/><path d="M3.5 12.5l8.5 4.5 8.5-4.5"/>',
   'devops-engineer':'<path d="M12 3c2.8 1.8 4 5.2 4 8.5L12 15l-4-3.5C8 8.2 9.2 4.8 12 3z"/><circle cx="12" cy="9" r="1.6"/><path d="M8 15.5l-2.5 4M16 15.5l2.5 4"/>',
-  'qa-test-senior':'<path d="M9 3v6l-4.2 8.2A2 2 0 0 0 6.6 20h10.8a2 2 0 0 0 1.8-2.8L15 9V3"/><path d="M8 3h8M8.5 13h7"/>',
-  'senior-recruiter':'<circle cx="12" cy="8" r="3.6"/><path d="M5.5 20c0-3.8 3-6 6.5-6s6.5 2.2 6.5 6"/>'
+  'qa-test-senior':'<path d="M9 3v6l-4.2 8.2A2 2 0 0 0 6.6 20h10.8a2 2 0 0 0 1.8-2.8L15 9V3"/><path d="M8 3h8M8.5 13h7"/>'
 };
 const HUBGLYPH='<circle cx="7" cy="12" r="2.4"/><circle cx="17" cy="6.5" r="2.4"/><circle cx="17" cy="17.5" r="2.4"/><path d="M9 11l6-3.4M9 13l6 3.4"/>';
 /* a friendly robot: face screen (eyes+smile) + body with a chest screen showing the role glyph */
