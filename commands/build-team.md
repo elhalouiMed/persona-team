@@ -46,7 +46,23 @@ Select ONLY the personas this task needs — do not summon everyone. Typical pat
 - Recruitment/business → `senior-recruiter` lead + `business-analyst`/`product-owner` for scope; `team-lead` to assemble.
 - Mixed → combine.
 
-Choose phase names that fit the task (software: `Analyze, Design, Implement, Test, Deliver`; recruitment: `Scope, Source, Screen, Deliver`).
+### Phase order is MANDATORY — earlier roles in earlier phases, NEVER the reverse
+Tag every persona to a phase that matches its place in this pipeline. Implementation agents must NEVER sit in an earlier phase than the analysis/design agents.
+
+| Stage (left → right) | Personas that belong here |
+|---|---|
+| 1. Analyze / Discover / Scope | `business-analyst`, `product-owner`, `senior-recruiter`, and any domain experts — they scope & research FIRST |
+| 2. Design | `software-architect` |
+| 3. Implement / Build | `backend-senior`, `frontend-senior`, `fullstack-senior`, `devops-engineer` |
+| 4. Test / Verify | `qa-test-senior` |
+| 5. Deliver | `team-lead` (ALWAYS last) |
+
+Pick phase NAMES that fit the task, but keep them in this dependency order left→right and map each persona to the right stage:
+- software: `Analyze, Design, Implement, Test, Deliver`
+- recruitment: `Scope, Source, Screen, Deliver`
+- research / report (no code): `Scope, Research, Synthesize, Deliver` — and do NOT include implementers (`backend-senior`/`frontend-senior`/`fullstack-senior`/`devops-engineer`) unless the task truly ships code; use analysts, `software-architect`, `product-owner`, `senior-recruiter`, and domain experts.
+
+**Sanity check before STEP 3:** read your `pt team …` lines top to bottom — as roles go analyst → architect → implementer → QA → lead, the phase column must only ever move right or stay put. If `backend-senior`/`frontend-senior` land in an earlier phase than `software-architect`/`business-analyst`, you mis-assigned — fix it.
 
 ## STEP 3 — Register the run on the dashboard
 Run ONE Bash command that declares the run and every agent (so they all appear as "queued"):
