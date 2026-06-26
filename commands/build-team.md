@@ -15,10 +15,12 @@ You are the **Team Builder / Orchestrator**. The user gives a task and wants a t
 ### Dashboard helper — IMPORTANT (zsh-safe)
 Shell state does NOT persist between Bash calls, so **define this `pt` function at the TOP of every Bash block that emits dashboard events**:
 ```
-pt(){ node "$HOME/.claude/persona-team/pt.mjs" "$@"; }
+RUN="<short-kebab-slug-of-the-task>"   # one id for THIS run — keep IDENTICAL in every block
+pt(){ node "$HOME/.claude/persona-team/pt.mjs" --run "$RUN" "$@"; }
 ```
 `pt` pushes live events to the dashboard and never fails the run (it just warns if the server is down).
-DO NOT use the form `PT="node …pt.mjs"; $PT start …` — in zsh that does NOT word-split and every call fails with "no such file or directory". Always use the `pt` function (or call `node "$HOME/.claude/persona-team/pt.mjs" …` directly).
+**`RUN` is this run's unique id** — set it ONCE at STEP 0 to a short kebab-case slug of the task (e.g. `csv-export`, `stripe-billing`) and reuse the EXACT same value in every Bash block. This lets several `/build-team` runs (in different chat windows) share one dashboard without clobbering each other — each appears as its own task in the runs bar. If two tasks could collide, add a 3-char suffix (e.g. `csv-export-a1`).
+DO NOT use the form `PT="node …pt.mjs"; $PT start …` — in zsh that does NOT word-split and every call fails with "no such file or directory". Always use the `pt` function (or call `node "$HOME/.claude/persona-team/pt.mjs" --run "$RUN" …` directly).
 
 ## STEP 0 — Launch the live dashboard (always do this first)
 Start the server **in the background** (use the Bash tool's `run_in_background` — do NOT block on it):
@@ -49,7 +51,8 @@ Choose phase names that fit the task (software: `Analyze, Design, Implement, Tes
 ## STEP 3 — Register the run on the dashboard
 Run ONE Bash command that declares the run and every agent (so they all appear as "queued"):
 ```
-pt(){ node "$HOME/.claude/persona-team/pt.mjs" "$@"; }
+RUN="<short-kebab-slug-of-the-task>"   # one id for THIS run — keep IDENTICAL in every block
+pt(){ node "$HOME/.claude/persona-team/pt.mjs" --run "$RUN" "$@"; }
 pt start "<task>" "Phase1,Phase2,Phase3,Deliver"
 pt team business-analyst "Requirements & scope" Phase1
 pt team software-architect "Design & breakdown" Phase2
@@ -63,14 +66,16 @@ Print a short summary: chosen personas (+ why each) and what runs in parallel vs
 For EACH phase, in order:
 1. Mark it active + its agents working (one Bash command — redefine `pt` at the top):
    ```
-   pt(){ node "$HOME/.claude/persona-team/pt.mjs" "$@"; }
+   RUN="<short-kebab-slug-of-the-task>"   # one id for THIS run — keep IDENTICAL in every block
+pt(){ node "$HOME/.claude/persona-team/pt.mjs" --run "$RUN" "$@"; }
    pt phase <Phase> active
    pt status <id> working "<short what-its-doing>"   # for each agent in this phase
    ```
 2. **Spawn that phase's persona agents** using the Agent tool with `subagent_type` = the persona id. Run independent agents in the SAME message so they execute in parallel. Give each agent the task context + the relevant prior outputs (requirements, design, etc.). For software agents that edit files in parallel, prefer worktree isolation if available.
 3. When they return, mark them done + close the phase (one Bash command):
    ```
-   pt(){ node "$HOME/.claude/persona-team/pt.mjs" "$@"; }
+   RUN="<short-kebab-slug-of-the-task>"   # one id for THIS run — keep IDENTICAL in every block
+pt(){ node "$HOME/.claude/persona-team/pt.mjs" --run "$RUN" "$@"; }
    pt status <id> done "<one-line result>"            # for each agent
    pt phase <Phase> done
    ```
@@ -81,7 +86,8 @@ Order phases by dependency (analysis → design → implementation → test → 
 ## STEP 6 — Deliver
 Have `team-lead` (software) or synthesize directly (recruitment) integrate everything into ONE delivery, verified against the original task. Then:
 ```
-pt(){ node "$HOME/.claude/persona-team/pt.mjs" "$@"; }
+RUN="<short-kebab-slug-of-the-task>"   # one id for THIS run — keep IDENTICAL in every block
+pt(){ node "$HOME/.claude/persona-team/pt.mjs" --run "$RUN" "$@"; }
 pt complete "<one-line delivery summary>"
 ```
 Present the final result to the user and remind them the run is visible at **http://localhost:7331**.

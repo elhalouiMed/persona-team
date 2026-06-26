@@ -13,68 +13,83 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const HTML_PATH = join(HERE, 'public', 'index.html');
 const SERVER_ID = 'persona-team-server-v1';
 
-const freshState = () => ({
-  runId: null, task: null, startedAt: null, status: 'idle',
-  phases: [], agents: {}, order: [], logs: [],
-});
-let state = freshState();
-const clients = new Set();
+// ── Multi-run model ──────────────────────────────────────────────────────────
+// Each /build-team invocation (in any chat window) is its own RUN, keyed by the
+// `run` id on every event (falls back to 'default' for legacy single-run callers).
+// Runs live side-by-side; the dashboard shows all of them and drills into any one.
+const MAX_RUNS = 16;
 const nowISO = () => new Date().toISOString();
+const freshRun = (id, title) => ({
+  runId: id, task: title || id, startedAt: nowISO(), updatedAt: nowISO(),
+  status: 'running', phases: [], agents: {}, order: [], logs: [],
+});
+const runs = new Map();   // runId -> run state (Map keeps insertion order = age)
+const clients = new Set();
 
-const snapshot = () => `data: ${JSON.stringify({ kind: 'snapshot', state })}\n\n`;
+const snapshot = () => `data: ${JSON.stringify({ kind: 'snapshot', runs: Object.fromEntries(runs) })}\n\n`;
 function broadcast() {
   const payload = snapshot();
   for (const res of clients) { try { res.write(payload); } catch { /* ignore */ } }
 }
 
+function prune() {
+  while (runs.size > MAX_RUNS) {
+    // evict the oldest COMPLETE run; if none complete, the oldest overall.
+    let victim = null;
+    for (const [id, r] of runs) { if (r.status === 'complete') { victim = id; break; } }
+    if (!victim) victim = runs.keys().next().value;
+    runs.delete(victim);
+  }
+}
+
 function apply(ev) {
+  const runId = ev.run || 'default';
+
+  if (ev.kind === 'start') {
+    const r = freshRun(runId, ev.task);
+    r.phases = (ev.phases || []).map((name) => ({ name, status: 'pending' }));
+    r.logs.push({ ts: nowISO(), message: `Run started: ${r.task}` });
+    runs.delete(runId); runs.set(runId, r);   // (re)insert as the newest
+    prune();
+    return;
+  }
+
+  let r = runs.get(runId);
+  if (!r) { r = freshRun(runId, runId); runs.set(runId, r); prune(); }  // event before start → stub it
+  r.updatedAt = nowISO();
+
   switch (ev.kind) {
-    case 'start':
-      state = freshState();
-      state.startedAt = nowISO();
-      state.runId = ev.runId || ('r' + Date.now().toString(36));
-      state.task = ev.task || 'Untitled run';
-      state.status = 'running';
-      state.phases = (ev.phases || []).map((name) => ({ name, status: 'pending' }));
-      state.logs.push({ ts: nowISO(), message: `Run started: ${state.task}` });
-      break;
     case 'team':
-      if (!state.agents[ev.id]) state.order.push(ev.id);
-      state.agents[ev.id] = {
-        id: ev.id, role: ev.role || '', phase: ev.phase || '',
-        status: 'waiting', startedAt: null, endedAt: null, note: '',
-      };
+      if (!r.agents[ev.id]) r.order.push(ev.id);
+      r.agents[ev.id] = { id: ev.id, role: ev.role || '', phase: ev.phase || '', status: 'waiting', startedAt: null, endedAt: null, note: '' };
       break;
     case 'status': {
-      if (!state.agents[ev.id]) {
-        state.order.push(ev.id);
-        state.agents[ev.id] = { id: ev.id, role: '', phase: ev.phase || '', status: 'waiting', startedAt: null, endedAt: null, note: '' };
-      }
-      const a = state.agents[ev.id];
+      if (!r.agents[ev.id]) { r.order.push(ev.id); r.agents[ev.id] = { id: ev.id, role: '', phase: ev.phase || '', status: 'waiting', startedAt: null, endedAt: null, note: '' }; }
+      const a = r.agents[ev.id];
       a.status = ev.status;
       if (ev.phase) a.phase = ev.phase;
       if (ev.note) a.note = ev.note;
       if (ev.status === 'working' && !a.startedAt) a.startedAt = nowISO();
       if (ev.status === 'done' || ev.status === 'blocked') a.endedAt = nowISO();
-      state.logs.push({ ts: nowISO(), message: `${ev.id} → ${ev.status}${ev.note ? ' · ' + ev.note : ''}` });
+      r.logs.push({ ts: nowISO(), message: `${ev.id} → ${ev.status}${ev.note ? ' · ' + ev.note : ''}` });
       break;
     }
     case 'phase': {
-      const p = state.phases.find((x) => x.name === ev.name);
-      if (p) p.status = ev.status; else state.phases.push({ name: ev.name, status: ev.status });
+      const p = r.phases.find((x) => x.name === ev.name);
+      if (p) p.status = ev.status; else r.phases.push({ name: ev.name, status: ev.status });
       break;
     }
     case 'log':
-      state.logs.push({ ts: nowISO(), message: ev.message || '' });
+      r.logs.push({ ts: nowISO(), message: ev.message || '' });
       break;
     case 'complete':
-      state.status = 'complete';
-      state.logs.push({ ts: nowISO(), message: `✦ Delivered${ev.summary ? ': ' + ev.summary : ''}` });
+      r.status = 'complete';
+      r.logs.push({ ts: nowISO(), message: `✦ Delivered${ev.summary ? ': ' + ev.summary : ''}` });
       break;
     default:
       break;
   }
-  if (state.logs.length > 300) state.logs = state.logs.slice(-300);
+  if (r.logs.length > 300) r.logs = r.logs.slice(-300);
 }
 
 const server = createServer(async (req, res) => {
@@ -91,7 +106,7 @@ const server = createServer(async (req, res) => {
     return;
   }
   if (req.method === 'GET' && url.pathname === '/state') {
-    res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify(state)); return;
+    res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ runs: Object.fromEntries(runs) })); return;
   }
   if (req.method === 'GET' && url.pathname === '/events') {
     res.writeHead(200, {

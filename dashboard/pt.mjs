@@ -11,7 +11,15 @@
 
 const PORT = process.env.PERSONA_TEAM_PORT || '7331';
 const BASE = `http://localhost:${PORT}`;
-const [cmd, ...a] = process.argv.slice(2);
+
+// Each /build-team run gets a `run` id so multiple chat windows can share ONE
+// dashboard without clobbering each other. Pass `--run <id>` (or set
+// PERSONA_TEAM_RUN); defaults to 'default' for legacy single-run callers.
+const argv = process.argv.slice(2);
+let run = process.env.PERSONA_TEAM_RUN || 'default';
+const ri = argv.indexOf('--run');
+if (ri >= 0) { run = argv[ri + 1] || run; argv.splice(ri, 2); }
+const [cmd, ...a] = argv;
 
 function build() {
   switch (cmd) {
@@ -27,6 +35,7 @@ function build() {
 
 const ev = build();
 if (!ev) { console.error('persona-team: unknown command. See pt.mjs header for usage.'); process.exit(2); }
+ev.run = run;
 
 try {
   const res = await fetch(`${BASE}/event`, {
