@@ -45,6 +45,9 @@ function prune() {
 function apply(ev) {
   const runId = ev.run || 'default';
 
+  if (ev.kind === 'remove') { if (ev.run) runs.delete(ev.run); return; }
+  if (ev.kind === 'clear') { if (ev.scope === 'finished') { for (const [id, r] of [...runs]) if (r.status === 'complete') runs.delete(id); } else runs.clear(); return; }
+
   if (ev.kind === 'start') {
     const r = freshRun(runId, ev.task);
     r.phases = (ev.phases || []).map((name) => ({ name, status: 'pending' }));

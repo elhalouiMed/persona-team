@@ -29,6 +29,8 @@ function build() {
     case 'phase':   return { kind: 'phase',  name: a[0], status: a[1] || 'active' };
     case 'log':     return { kind: 'log',    message: a[0] || '' };
     case 'complete':return { kind: 'complete', summary: a[0] || '' };
+    case 'remove':  return { kind: 'remove' };               // dismiss this --run from the board
+    case 'clear':   return { kind: 'clear', scope: a[0] || '' }; // 'finished' = drop completed runs; else all
     default: return null;
   }
 }

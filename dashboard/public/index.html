@@ -57,6 +57,8 @@
   .rchip.st-complete .rdot{background:#46e0a8}
   .rchip .rttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;font-weight:600}
   .rchip .rmeta{font-size:10px;color:var(--muted-2);flex:none} .rchip.sel .rmeta{color:var(--accent)}
+  .rchip .rx{margin-left:1px;color:var(--muted-2);font-size:15px;line-height:1;width:15px;text-align:center;border-radius:4px}
+  .rchip .rx:hover{color:#fb7185;background:color-mix(in srgb,#fb7185 16%,transparent)}
   .rlatest{flex:none;margin-left:auto;height:26px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--muted-2);cursor:pointer;font-size:10.5px;white-space:nowrap}
   .rlatest.on{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
   #stage{position:fixed;top:102px;left:0;right:340px;bottom:0;
@@ -404,6 +406,7 @@ function runList(){ return Object.values(RUNS).sort((a,b)=>Date.parse(b.updatedA
 function pickSel(){ const ids=Object.keys(RUNS); if(!ids.length){sel=null;return;} if(pinned&&RUNS[sel])return; sel=runList()[0].runId; }
 function onRuns(){ pickSel(); if(sel!==lastSel){ clearGraph(); selected=null; hoverId=null; lastSel=sel; } S=sel?RUNS[sel]:null; renderBar(); render(); }
 function selectRun(id){ if(!RUNS[id])return; sel=id; pinned=true; if(sel!==lastSel){clearGraph();selected=null;hoverId=null;lastSel=sel;} S=RUNS[id]; renderBar(); render(); }
+function removeRun(id){ if(sel===id)pinned=false; fetch('/event',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:'remove',run:id})}).catch(()=>{}); }
 function renderBar(){
   const bar=$('runsbar'), list=runList();
   if(!list.length){ bar.innerHTML='<span class="rlabel">no active runs — start one with /build-team</span>'; return; }
@@ -411,10 +414,11 @@ function renderBar(){
   const chips=list.map(r=>{
     const ags=Object.values(r.agents), w=ags.filter(a=>a.status==='working').length; totW+=w;
     const meta=r.status==='complete'?'done':(w?(w+' working'):(ags.length+' agents'));
-    return '<button class="rchip st-'+r.status+(w?' busy':'')+(r.runId===sel?' sel':'')+'" data-run="'+esc(r.runId)+'" title="'+esc(r.task)+'"><span class="rdot"></span><span class="rttl">'+esc(r.task)+'</span><span class="rmeta">'+meta+'</span></button>';
+    return '<button class="rchip st-'+r.status+(w?' busy':'')+(r.runId===sel?' sel':'')+'" data-run="'+esc(r.runId)+'" title="'+esc(r.task)+'"><span class="rdot"></span><span class="rttl">'+esc(r.task)+'</span><span class="rmeta">'+meta+'</span><span class="rx" data-x="'+esc(r.runId)+'" title="dismiss this run">×</span></button>';
   }).join('');
   bar.innerHTML='<span class="rlabel">'+list.length+' run'+(list.length>1?'s':'')+' · '+totW+' working</span>'+chips+'<button class="rlatest'+(pinned?'':' on')+'" id="rlatest" title="Follow the most recently active run">'+(pinned?'⦿ pinned':'⦿ following latest')+'</button>';
   bar.querySelectorAll('.rchip').forEach(b=>b.onclick=()=>selectRun(b.dataset.run));
+  bar.querySelectorAll('.rx').forEach(x=>x.onclick=(e)=>{e.stopPropagation();removeRun(x.dataset.x);});
   const rl=$('rlatest'); if(rl) rl.onclick=()=>{ pinned=false; onRuns(); };
 }
 function renderHeader(){
